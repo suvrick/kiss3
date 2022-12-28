@@ -19,7 +19,7 @@ func NewBotController(service IBotService) *BotController {
 }
 
 func (ctrl *BotController) Register(router *gin.Engine) {
-	botGroup := router.Group("api/bot")
+	botGroup := router.Group("api/bots")
 	botGroup.GET("/", ctrl.Get)
 	botGroup.PUT("/", ctrl.Update)
 	botGroup.POST("/", ctrl.Create)

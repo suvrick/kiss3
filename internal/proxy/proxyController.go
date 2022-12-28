@@ -19,14 +19,14 @@ func NewProxyController(service IProxyService) *ProxyController {
 }
 
 func (ctrl *ProxyController) Register(router *gin.Engine) {
-	proxyGroup := router.Group("api/proxy")
+	proxyGroup := router.Group("api/proxies")
 	proxyGroup.GET("/", ctrl.Get)
 	proxyGroup.PUT("/", ctrl.Update)
 	proxyGroup.POST("/", ctrl.Create)
 	proxyGroup.DELETE("/:id", ctrl.Delete)
 }
 
-// curl -X GET localhost:8080/api/proxy
+// curl -X GET localhost:8080/api/proxies
 func (ctrl *ProxyController) Get(c *gin.Context) {
 
 	limit := c.GetInt("limit")
@@ -41,7 +41,7 @@ func (ctrl *ProxyController) Get(c *gin.Context) {
 	until.HTTPResponse(c, http.StatusOK, "Get proxy list success", nil, proxies)
 }
 
-// curl -X POST localhost:8080/api/proxy/create --data {\"proxy\":\"qwe\"}
+// curl -X POST localhost:8080/api/proxies/ --data {\"proxy\":\"qwe\"}
 func (ctrl *ProxyController) Create(c *gin.Context) {
 
 	// type ProxyDTOCreate struct {
@@ -66,7 +66,7 @@ func (ctrl *ProxyController) Create(c *gin.Context) {
 	until.HTTPResponse(c, http.StatusOK, "Create success!", nil, p)
 }
 
-// curl -X PUT localhost:8080/api/proxy/update --data {\"id\":2,\"is_bad\":true}
+// curl -X PUT localhost:8080/api/proxies/ --data {\"id\":2,\"is_bad\":true}
 func (ctrl *ProxyController) Update(c *gin.Context) {
 
 	dto := Proxy{}
@@ -86,7 +86,7 @@ func (ctrl *ProxyController) Update(c *gin.Context) {
 	until.HTTPResponse(c, http.StatusOK, "Create success!", nil, dto)
 }
 
-// curl -X DELETE localhost:8080/api/proxy/delete/1
+// curl -X DELETE localhost:8080/api/proxies/1
 func (ctrl *ProxyController) Delete(c *gin.Context) {
 
 	ID := c.Param("id")
