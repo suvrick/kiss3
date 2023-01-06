@@ -20,15 +20,19 @@ func (repo *UserRepository) Create(ctx context.Context, user User) (User, error)
 
 	cmd := `INSERT INTO users(
 		email,
+		role,
 		password_hash, 
 		at_create,
 		at_update
 	) 
-	VALUES($1, $2, $3, $4)
+	VALUES($1, $2, $3, $4, $5)
 	RETURNING id`
+
+	user.Role = "player"
 
 	row := repo.client.Pool.QueryRow(ctx, cmd,
 		&user.Email,
+		&user.Role,
 		&user.PasswordHash,
 		&user.AtCreate,
 		&user.AtUpdate,
@@ -84,13 +88,13 @@ func (repo *UserRepository) GetByID(ctx context.Context, userID uint64) (User, e
 	}
 
 	cmd := `
-	SELECT 
-		email, 
-		at_create, 
-		at_update
-	FROM users 
-	WHERE id = $1
-	LIMIT 1
+		SELECT 
+			email, 
+			at_create, 
+			at_update
+		FROM users 
+		WHERE id = $1
+		LIMIT 1
 	`
 
 	err := repo.client.Pool.QueryRow(ctx, cmd, userID).Scan(&user.Email, &user.AtCreate, &user.AtUpdate)
