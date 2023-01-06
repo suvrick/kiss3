@@ -54,7 +54,7 @@ func (srv *UserService) SingIn(ctx context.Context, email string, password strin
 		return "", fmt.Errorf("SingIn fail")
 	}
 
-	return jwthelper.NewToken(user.ID)
+	return jwthelper.NewToken(user.ID, user.Email, user.Role)
 }
 
 func getHash(password string) string {

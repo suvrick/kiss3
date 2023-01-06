@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/suvrick/kiss/internal/middlewares"
 	"github.com/suvrick/kiss/internal/until"
 )
 
@@ -20,6 +21,9 @@ func NewProxyController(service IProxyService) *ProxyController {
 
 func (ctrl *ProxyController) Register(router *gin.Engine) {
 	proxyGroup := router.Group("api/proxies")
+
+	proxyGroup.Use(middlewares.AuthMiddleware())
+
 	proxyGroup.GET("/", ctrl.Get)
 	proxyGroup.PUT("/", ctrl.Update)
 	proxyGroup.POST("/", ctrl.Create)

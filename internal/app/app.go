@@ -41,21 +41,18 @@ func (a *App) Run() error {
 	router := gin.New()
 	router.Use(gin.Recovery())
 	router.Use(gin.Logger())
-	router.Use(middlewares.AuthMiddleware())
 
 	router.NoRoute(func(c *gin.Context) {
 		dir, file := path.Split(c.Request.RequestURI)
 		ext := filepath.Ext(file)
 		if file == "" || ext == "" {
-			c.File("./ui/dist/ui/index.html")
+			c.File("../ui/dist/ui/index.html")
 		} else {
-			c.File("./ui/dist/ui/" + path.Join(dir, file))
+			c.File("../ui/dist/ui/" + path.Join(dir, file))
 		}
 	})
 
 	router.Use(middlewares.CORSMiddleware())
-
-	//router.LoadHTMLGlob("../internal/templates/**/*")
 
 	proxyRepository := proxy.NewProxyRepository(db)
 	proxyService := proxy.NewProxyService(proxyRepository)

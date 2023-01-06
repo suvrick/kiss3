@@ -9,6 +9,7 @@ type BotLogin struct {
 
 type Bot struct {
 	ID       uint64    `json:"id,omitempty"`
+	OwerID   uint64    `json:"ower_id,omitempty"`
 	GameID   uint32    `json:"game_id,omitempty"`
 	Name     string    `json:"name,omitempty"`
 	Balance  uint32    `json:"balance,omitempty"`

@@ -15,7 +15,7 @@ func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		if c.Request.Method == "POST" {
-			notAuth := []string{"/api/users/singin", "/api/users"}
+			notAuth := []string{"/api/auth/login", "/api/auth/register"}
 			requestPath := c.Request.URL.Path
 			for _, value := range notAuth {
 				if value == requestPath {
@@ -27,14 +27,14 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		tokenHeader := c.Request.Header.Get("Authorization")
 		if tokenHeader == "" {
-			until.HTTPResponse(c, http.StatusBadRequest, "Authentication fail.", nil, nil)
+			until.HTTPResponse(c, http.StatusUnauthorized, "Authentication fail.Invalid token.", nil, nil)
 			c.Abort()
 			return
 		}
 
 		splitted := strings.Split(tokenHeader, " ")
 		if len(splitted) != 2 {
-			until.HTTPResponse(c, http.StatusBadRequest, "Authentication fail.", nil, nil)
+			until.HTTPResponse(c, http.StatusUnauthorized, "Authentication fail. Invalid token.", nil, nil)
 			c.Abort()
 			return
 		}
@@ -42,7 +42,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		tk := splitted[1]
 		userID, ok := jwthelper.Parse(tk)
 		if !ok {
-			until.HTTPResponse(c, http.StatusBadRequest, "Authentication fail.", nil, nil)
+			until.HTTPResponse(c, http.StatusUnauthorized, "Authentication fail. Bad token.", nil, nil)
 			c.Abort()
 			return
 		}

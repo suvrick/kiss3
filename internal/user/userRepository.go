@@ -48,7 +48,33 @@ func (repo *UserRepository) Delete(ctx context.Context, userID uint64) error {
 }
 
 func (repo *UserRepository) Get(ctx context.Context, limit int) ([]User, error) {
-	return nil, nil
+
+	cmd := `
+	 SELECT 
+	 	id, email, role, at_create, at_update 
+	 FROM 
+	 	users
+	`
+	rows, err := repo.client.Pool.Query(ctx, cmd)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	users := make([]User, 0)
+
+	for rows.Next() {
+		user := User{}
+		err := rows.Scan(&user.ID, &user.Email, &user.Role, &user.AtCreate, &user.AtUpdate)
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, user)
+	}
+
+	return users, nil
 }
 
 func (repo *UserRepository) GetByID(ctx context.Context, userID uint64) (User, error) {

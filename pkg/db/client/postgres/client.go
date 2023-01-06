@@ -87,6 +87,7 @@ func (c *Client) initilize() error {
 		id serial primary key,
 		email text unique not null,
 		password_hash text not null,
+		role text not null,
 		at_create timestamp not null,
 		at_update timestamp not null
 	);`

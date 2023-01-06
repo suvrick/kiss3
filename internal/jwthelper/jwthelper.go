@@ -8,13 +8,17 @@ const TOKEN = "asdghjpi34585fgdfs"
 
 type Token struct {
 	jwt.StandardClaims
-	UserID uint64
+	UserID uint64 `json:"user_id,omitempty"`
+	Role   string `json:"role,omitempty"`
+	Email  string `json:"email,omitempty"`
 }
 
-func NewToken(userID uint64) (string, error) {
+func NewToken(userID uint64, email string, role string) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), Token{
 		UserID: userID,
+		Email:  email,
+		Role:   role,
 	})
 
 	t, err := token.SignedString([]byte(TOKEN))
