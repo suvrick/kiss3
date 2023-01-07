@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/suvrick/kiss/pkg/db/client/postgres"
 )
@@ -48,7 +49,16 @@ func (repo *UserRepository) Update(ctx context.Context, user User) (User, error)
 }
 
 func (repo *UserRepository) Delete(ctx context.Context, userID uint64) error {
-	return nil
+
+	cmd := `DELETE FROM users WHERE id = $1`
+
+	tag, err := repo.client.Pool.Exec(ctx, cmd, userID)
+
+	if tag.RowsAffected() == 0 {
+		return fmt.Errorf("user not found")
+	}
+
+	return err
 }
 
 func (repo *UserRepository) Get(ctx context.Context, limit int) ([]User, error) {
@@ -90,6 +100,7 @@ func (repo *UserRepository) GetByID(ctx context.Context, userID uint64) (User, e
 	cmd := `
 		SELECT 
 			email, 
+			role,
 			at_create, 
 			at_update
 		FROM users 
@@ -97,7 +108,7 @@ func (repo *UserRepository) GetByID(ctx context.Context, userID uint64) (User, e
 		LIMIT 1
 	`
 
-	err := repo.client.Pool.QueryRow(ctx, cmd, userID).Scan(&user.Email, &user.AtCreate, &user.AtUpdate)
+	err := repo.client.Pool.QueryRow(ctx, cmd, userID).Scan(&user.Email, &user.Role, &user.AtCreate, &user.AtUpdate)
 
 	return user, err
 }

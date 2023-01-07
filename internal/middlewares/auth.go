@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"log"
 	"net/http"
 	"strings"
 
@@ -27,14 +28,16 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		tokenHeader := c.Request.Header.Get("Authorization")
 		if tokenHeader == "" {
-			until.HTTPResponse(c, http.StatusUnauthorized, "Authentication fail.Invalid token.", nil, nil)
+			log.Println("[AuthMiddleware] Authentication fail. Miss header authorization")
+			until.HTTPResponse(c, http.StatusUnauthorized, "Authentication fail.", nil, nil)
 			c.Abort()
 			return
 		}
 
 		splitted := strings.Split(tokenHeader, " ")
 		if len(splitted) != 2 {
-			until.HTTPResponse(c, http.StatusUnauthorized, "Authentication fail. Invalid token.", nil, nil)
+			log.Println("[AuthMiddleware] Authentication fail. Invalid header authorization")
+			until.HTTPResponse(c, http.StatusUnauthorized, "Authentication fail.", nil, nil)
 			c.Abort()
 			return
 		}
@@ -42,7 +45,8 @@ func AuthMiddleware() gin.HandlerFunc {
 		tk := splitted[1]
 		userID, ok := jwthelper.Parse(tk)
 		if !ok {
-			until.HTTPResponse(c, http.StatusUnauthorized, "Authentication fail. Bad token.", nil, nil)
+			log.Println("[AuthMiddleware] Authentication fail. Incorrect jwt token")
+			until.HTTPResponse(c, http.StatusUnauthorized, "Authentication fail.", nil, nil)
 			c.Abort()
 			return
 		}

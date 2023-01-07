@@ -76,6 +76,8 @@ func (repo *ProxyRepository) Get(ctx context.Context, limit int) ([]Proxy, error
 		return nil, err
 	}
 
+	rows.Close()
+
 	proxies := make([]Proxy, 0)
 
 	for rows.Next() {

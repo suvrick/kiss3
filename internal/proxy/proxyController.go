@@ -57,13 +57,13 @@ func (ctrl *ProxyController) Create(c *gin.Context) {
 
 	err := c.BindJSON(&dto)
 	if err != nil {
-		until.HTTPResponse(c, http.StatusBadRequest, "Create fail.", err, nil)
+		until.HTTPResponse(c, http.StatusBadRequest, "Create proxy fail.", err, nil)
 		return
 	}
 
 	p, err := ctrl.service.Create(c.Request.Context(), dto)
 	if err != nil {
-		until.HTTPResponse(c, http.StatusBadRequest, "Create fail.", err, nil)
+		until.HTTPResponse(c, http.StatusBadRequest, "Create proxy fail.", err, nil)
 		return
 	}
 

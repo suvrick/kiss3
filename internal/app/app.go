@@ -2,6 +2,7 @@ package app
 
 import (
 	"log"
+	"os"
 	"path"
 	"path/filepath"
 
@@ -14,6 +15,10 @@ import (
 	"github.com/suvrick/kiss/pkg/db/client/postgres"
 )
 
+const (
+	logFile = "app.log"
+)
+
 type App struct {
 }
 
@@ -22,6 +27,25 @@ func NewApp() *App {
 }
 
 func (a *App) Run() error {
+
+	dir, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+
+	logPath := path.Join(dir, logFile)
+
+	file, err := os.OpenFile(logPath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+
+	defer file.Close()
+
+	log.SetOutput(file)
+	log.SetFlags(log.Ldate | log.Ltime | log.LUTC | log.Lshortfile)
+
+	log.Println("[Run] initialize logger: OK")
 
 	dbconfig := &db.DBConfig{
 		Host:     "localhost",
@@ -40,7 +64,9 @@ func (a *App) Run() error {
 
 	router := gin.New()
 	router.Use(gin.Recovery())
-	router.Use(gin.Logger())
+	router.Use(gin.LoggerWithConfig(gin.LoggerConfig{
+		Output: log.Writer(),
+	}))
 
 	router.NoRoute(func(c *gin.Context) {
 		dir, file := path.Split(c.Request.RequestURI)
