@@ -51,7 +51,7 @@ func (srv *UserService) SingIn(ctx context.Context, email string, password strin
 
 	user, err := srv.repo.FindByEmailAndPassword(ctx, email, getHash(password))
 	if err != nil {
-		return "", fmt.Errorf("SingIn fail")
+		return "", fmt.Errorf("invalid email or password.")
 	}
 
 	return jwthelper.NewToken(user.ID, user.Email, user.Role)

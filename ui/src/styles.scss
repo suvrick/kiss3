@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .btn {
+        @apply inline-block w-full px-7 py-3 bg-blue-600 text-white 
+        font-medium text-sm leading-snug uppercase rounded 
+        shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 
+        focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800
+         active:shadow-lg;
+    }
+    .form-input {
+        @apply block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white 
+        bg-clip-padding border border-solid border-gray-300 rounded 
+        transition ease-in-out m-0 focus:text-gray-700 focus:bg-white
+         focus:border-blue-600 focus:outline-none;
+    }
+    .menu-item {
+        @apply text-center text-gray-900 hover:bg-gray-50
+         hover:text-gray-900 p-3 text-sm font-medium
+    }
+    .menu-item-active {
+        @apply bg-gray-100
+    }
+}

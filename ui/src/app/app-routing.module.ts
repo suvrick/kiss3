@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { BotsComponent } from './pages/bots/bots.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { GamesComponent } from './pages/games/games.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ProxiesComponent } from './pages/proxies/proxies.component';
 import { RegisterComponent } from './pages/register/register.component';
@@ -18,6 +20,9 @@ const routes: Routes = [
       { path: "dashboard", component: DashboardComponent },
       { path: "proxies", component: ProxiesComponent },
       { path: "users", component: UsersComponent },
+      { path: "bots", component: BotsComponent },
+      { path: "games", component: GamesComponent },
+      { path: "settings", component: UsersComponent },
     ]
   },
   {

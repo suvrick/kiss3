@@ -14,6 +14,8 @@ import { AuthGuard } from './shared/classes/auth-guard';
 import { UsersComponent } from './pages/users/users.component';
 import { ProxiesComponent } from './pages/proxies/proxies.component';
 import { JwtInterceptor } from './shared/classes/jwt-interceptor';
+import { BotsComponent } from './pages/bots/bots.component';
+import { GamesComponent } from './pages/games/games.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,8 @@ import { JwtInterceptor } from './shared/classes/jwt-interceptor';
     DashboardComponent,
     UsersComponent,
     ProxiesComponent,
+    BotsComponent,
+    GamesComponent,
   ],
   imports: [
     BrowserModule,

@@ -68,15 +68,7 @@ func (a *App) Run() error {
 		Output: log.Writer(),
 	}))
 
-	router.NoRoute(func(c *gin.Context) {
-		dir, file := path.Split(c.Request.RequestURI)
-		ext := filepath.Ext(file)
-		if file == "" || ext == "" {
-			c.File("../ui/dist/ui/index.html")
-		} else {
-			c.File("../ui/dist/ui/" + path.Join(dir, file))
-		}
-	})
+	router.NoRoute(notRouteHandler)
 
 	router.Use(middlewares.CORSMiddleware())
 
@@ -101,4 +93,14 @@ func (a *App) Run() error {
 	// taskController.Register(router)
 
 	return router.Run(":8080")
+}
+
+func notRouteHandler(c *gin.Context) {
+	dir, file := path.Split(c.Request.RequestURI)
+	ext := filepath.Ext(file)
+	if file == "" || ext == "" {
+		c.File("../ui/dist/ui/index.html")
+	} else {
+		c.File("../ui/dist/ui/" + path.Join(dir, file))
+	}
 }
