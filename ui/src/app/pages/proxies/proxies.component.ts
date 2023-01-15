@@ -17,6 +17,7 @@ export class ProxiesComponent implements OnInit {
     this.proxies = [];
     this.proxyService.getProxies().subscribe({
       next: (resp) => {
+        console.log(resp)
         if (resp.code == 200) {
           this.proxies.push(...resp.data)
         }
@@ -27,4 +28,73 @@ export class ProxiesComponent implements OnInit {
     })
   }
 
+  onFileSelected(fileInput: any) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      let text = e.target.result as string
+      if(text){
+        let lines = text.split("\n")
+        lines.forEach((proxy)=>{
+          let result = this.parseProxy(proxy)
+          if (result) {
+            this.createProxy(result)
+          }
+        }) 
+      }
+    }
+
+    reader.readAsText(fileInput.target.files[0])
+  }
+
+  parseProxy(line: string): Proxy | undefined {
+    let array = line.split(":")
+    if(array.length == 4){
+      let proxy = new Proxy()
+      proxy.host = array[0]
+      proxy.port = Number.parseInt(array[1])
+      proxy.username = array[2]
+      proxy.password = array[3]
+
+      return proxy
+    } else {
+      return undefined
+    }
+  }
+
+  createProxy(proxy: Proxy) {
+    this.proxyService.addProxies(proxy).subscribe({
+      next: (resp) => {
+        console.log(resp)
+        if (resp.code == 200) {
+          this.proxies.push(resp.data)
+        }
+      },
+      error: (err) => {
+        console.error(err)
+      }
+    })
+  }
+
+  deleteProxy() {
+    this.proxies.forEach(p => {
+      if (p.selected) {
+        console.log(p)
+        this.proxyService.deleteProxy(p).subscribe({
+          next: (resp) => {
+            console.log(resp)
+            if (resp.code == 200) {
+              this.proxies = this.proxies.filter(proxy => proxy.id != p.id)
+            }
+          },
+          error: (err) => {
+            console.error(err)
+          }
+        })
+      }
+    });
+  }
+
+  toggleSelect() {
+
+  }
 }

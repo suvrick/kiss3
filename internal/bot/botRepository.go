@@ -96,7 +96,7 @@ func (repo *BotRepository) Get(ctx context.Context, limit int) ([]Bot, error) {
 		return nil, err
 	}
 
-	rows.Close()
+	defer rows.Close()
 
 	proxies := make([]Bot, 0)
 

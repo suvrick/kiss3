@@ -8,5 +8,7 @@ export class Proxy {
     create_at: Date
     update_at: Date
     is_bad: boolean
+
+    selected: boolean
 }
 

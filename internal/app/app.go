@@ -64,9 +64,10 @@ func (a *App) Run() error {
 
 	router := gin.New()
 	router.Use(gin.Recovery())
-	router.Use(gin.LoggerWithConfig(gin.LoggerConfig{
-		Output: log.Writer(),
-	}))
+	router.Use(gin.Logger())
+	// router.Use(gin.LoggerWithConfig(gin.LoggerConfig{
+	// 	Output: log.Writer(),
+	// }))
 
 	router.NoRoute(notRouteHandler)
 
