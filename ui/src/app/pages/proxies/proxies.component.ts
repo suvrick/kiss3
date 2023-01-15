@@ -11,7 +11,17 @@ export class ProxiesComponent implements OnInit {
 
   proxies: Proxy[]
 
-  constructor(private proxyService: ProxiesService) { }
+  displayItems: Proxy[]
+  page: number
+  selectCount: number
+  canPrev: boolean
+  canNext: boolean
+
+  constructor(private proxyService: ProxiesService) {
+    this.page = 0
+    this.selectCount = 5
+    this.displayItems = []
+   }
 
   ngOnInit(): void {
     this.proxies = [];
@@ -20,6 +30,7 @@ export class ProxiesComponent implements OnInit {
         console.log(resp)
         if (resp.code == 200) {
           this.proxies.push(...resp.data)
+          this.updateDisplay()
         }
       },
       error: (error) => {
@@ -67,6 +78,7 @@ export class ProxiesComponent implements OnInit {
         console.log(resp)
         if (resp.code == 200) {
           this.proxies.push(resp.data)
+          this.updateDisplay()
         }
       },
       error: (err) => {
@@ -84,6 +96,7 @@ export class ProxiesComponent implements OnInit {
             console.log(resp)
             if (resp.code == 200) {
               this.proxies = this.proxies.filter(proxy => proxy.id != p.id)
+              this.updateDisplay()
             }
           },
           error: (err) => {
@@ -94,7 +107,37 @@ export class ProxiesComponent implements OnInit {
     });
   }
 
-  toggleSelect() {
+  toggleSelect(e: any) {
+    this.proxies.forEach(p => {
+      p.selected = e.target.checked
+    })
+  }
 
+  updateDisplay(){
+    this.displayItems = []
+    let start = this.page * this.selectCount;
+    let end = this.page * this.selectCount + this.selectCount;
+
+    this.canPrev = this.page - 1 < 0;
+    this.canNext = (this.page + 1)* this.selectCount >= this.proxies.length;
+
+    if (start >= 0) {
+      for (let index = start; index < end; index++) {
+        if (index < this.proxies.length){
+          const element = this.proxies[index];
+          this.displayItems.push(element)
+        }
+      }
+    }
+  }
+
+  pagePrev() {
+    this.page = this.page - 1;
+    this.updateDisplay();
+  }
+  
+  pageNext() {
+    this.page = this.page + 1;
+    this.updateDisplay()
   }
 }
